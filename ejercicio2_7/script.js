@@ -12,13 +12,12 @@ function getProcessedData(url) {
 
 async function getProcessedData(url){
     try{
-        const response = await downloadData(url)
-        .then(v => {
-            return processDataInWorker(v);
-        });
+        const down = await downloadData(url)
+        .catch(await downloadFallbackData(url));
+        const proccess = await processDataInWorker(down)
 
-        return response;
+        return proccess;
     }catch(e){
-        return downloadFallbackData(url);
+        console.error(e.message);
     }
 }
